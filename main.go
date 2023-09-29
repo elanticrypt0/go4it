@@ -1,27 +1,23 @@
-package main
+package go4it
 
-import (
-	"fmt"
+func LoadAppConfig(configFile string) *AppConfig {
 
-	"github.com/elanticrypt0/go4it/go4it"
-)
+	if configFile == "" {
+		configFile = "./appconfig"
+	}
+	configFile = "./" + configFile + ".toml"
 
-func main() {
+	var appconfig AppConfig
+	ReadOrParseToml(configFile, &appconfig)
+	return &appconfig
+}
 
-	app := go4it.NewApp("")
+func NewApp(configFile string) App {
+	return App{
+		Config: LoadAppConfig(""),
+	}
+}
 
-	// app := core.LoadAppConfig()
-
-	fmt.Printf("Config: \n %v \n", app)
-	fmt.Printf("Config: \n %v \n", app.Config.App_name)
-	fmt.Printf("Config: \n %v \n", app.Config.App_version)
-
-	fmt.Printf("Conexiones: \n %v \n", app.Config.DB)
-	app.Connect2Db("local")
-	fmt.Printf("Config: \n %v \n", app.DB)
-	fmt.Printf("Config: \n %v \n", app.DB[0])
-	fmt.Printf("Config: \n %v \n", app.DB[0].Conn.Debug().Statement.TableExpr.Vars...)
-
-	// fmt.Printf("Conexiones: \n %v \n", app.Config.DB["conn1"])
-
+func (a *App) Connect2Db(connName string) {
+	Connect2DB(a, connName)
 }
