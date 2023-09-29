@@ -1,11 +1,10 @@
 module github.com/elanticrytp0/go4it
 
-go 1.21.0
+go 1.21.1
 
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/glebarez/sqlite v1.9.0
-	github.com/joho/godotenv v1.5.1
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.4
