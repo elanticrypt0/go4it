@@ -3,7 +3,7 @@ package go4it
 func LoadAppConfig(configFile string) *AppConfig {
 
 	if configFile == "" {
-		configFile = "./appconfig"
+		configFile = "appconfig"
 	}
 	configFile = "./" + configFile + ".toml"
 
