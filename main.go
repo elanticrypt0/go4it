@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/elanticrytp0/go4it/go4it"
+	"github.com/elanticrypt0/go4it/go4it"
 )
 
 func main() {
