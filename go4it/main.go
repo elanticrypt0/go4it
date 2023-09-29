@@ -5,7 +5,7 @@ func LoadAppConfig(configFile string) *AppConfig {
 	if configFile == "" {
 		configFile = "./appconfig"
 	}
-	configFile = configFile + ".toml"
+	configFile = "./" + configFile + ".toml"
 
 	var appconfig AppConfig
 	ReadOrParseToml(configFile, &appconfig)
