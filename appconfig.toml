@@ -1,0 +1,33 @@
+# App config
+app_name="Go4it!"
+app_version="0.0.5"
+app_server_host="localhost"
+app_server_port="3001"
+app_setup_enabled=true
+app_debug_mode=true
+app_CORS_Origins="http://localhost:4321, https://localhost"
+aPP_CORS_Headers="Origin, Content-Type, Accept"
+
+# Database connections
+# format:
+#[db.NAME]
+#   ...
+#
+
+[db.conn1]
+    connName="mysql"
+    engine="mysql"
+    host="localhost"
+    port="3336"
+    user="root"
+    password="secret"
+    dbname="my_db"
+
+[db.local]
+    connName="lib"
+    engine="sqlite"
+    host=""
+    port=""
+    user=""
+    password=""
+    dbname="my_db"
