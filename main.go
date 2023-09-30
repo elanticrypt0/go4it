@@ -14,7 +14,7 @@ func LoadAppConfig(configFile string) *AppConfig {
 
 func NewApp(configFile string) App {
 	return App{
-		Config: LoadAppConfig(""),
+		Config: LoadAppConfig(configFile),
 	}
 }
 
