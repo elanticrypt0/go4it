@@ -7,7 +7,7 @@ type AppConfig struct {
 	App_contact       string
 	App_repo          string
 	App_server_host   string
-	App_server_port   string
+	App_server_port   uint16
 	App_url           string
 	App_setup_enabled bool
 	App_debug_mode    bool
