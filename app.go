@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type App struct {
 	Config    *AppConfig
 	DB        []DBActive
-	DBPrimary *gorm.DB
+	DBPrimary uint8
 }
 
 func LoadAppConfig(configFile string) *AppConfig {
@@ -31,9 +31,9 @@ func (a *App) Connect2Db(connName string) {
 }
 
 func (a *App) SetPrimaryDB(index uint8) {
-	a.DBPrimary = a.DB[index].Conn
+	a.DBPrimary = index
 }
 
 func (a *App) GetPrimaryDB() *gorm.DB {
-	return a.DBPrimary
+	return a.DB[a.DBPrimary].Conn
 }
