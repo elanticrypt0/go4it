@@ -28,13 +28,19 @@ Para iniciar una app
 
     app := go4it.NewApp("")
 
-Y para conectarse con una db
+Y para conectarse con una db. EL nombre de la conexión es el que tiene en el archivo toml [db.NOMBRE]
 
     app.Connect2Db("local")
 
 Eso crea una nueva conexión a la que se accede por app.DB[ID] donde ID es el órden de en que hicimos la conexión. De toda formas si se quiere verificar que conexión es se puede retornar el nombre con
 
     app.DB[0].Name
+
+Se pueden setear dos conexiones para que sean la primaria y secundaria con
+
+    app.DB.SetPrimary(0)
+
+Donde 0 es el índice de la conexión realizada.
 
 
 

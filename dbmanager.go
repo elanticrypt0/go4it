@@ -19,7 +19,10 @@ func Connect2DB(app *App, connName string) {
 			Name: connName,
 			Conn: Connect2Engine(&dbConfig),
 		}
-		app.DB = append(app.DB, newConn)
+		app.DB.Actives = append(app.DB.Actives, newConn)
+	}
+	if len(app.DB.Actives) == 1 {
+		app.DB.SetPrimaryDB(0)
 	}
 
 }
