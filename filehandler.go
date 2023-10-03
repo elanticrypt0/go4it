@@ -20,7 +20,7 @@ func OpenFile(file string) []byte {
 	return filedata
 }
 
-func ReadOrParseToml[T any](file string, stru *T) {
+func ReadAndParseToml[T any](file string, stru *T) {
 	tomlData := string(OpenFile(file))
 	_, err := toml.Decode(tomlData, &stru)
 	if err != nil {
@@ -28,7 +28,7 @@ func ReadOrParseToml[T any](file string, stru *T) {
 	}
 }
 
-func ReadOrParseJson[T any](file string, stru *T) {
+func ReadAndParseJson[T any](file string, stru *T) {
 	fileData := strings.NewReader(string(OpenFile(file)))
 	jsonParser := json.NewDecoder(fileData)
 	jsonParser.Decode(&stru)

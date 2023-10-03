@@ -43,6 +43,9 @@ Se pueden setear dos conexiones para que sean la primaria y secundaria con
 Donde 0 es el índice de la conexión realizada.
 
 
+# Usar los métodos de go4it
+
+Si sólo se quiere extender alguna parte de go4it sólo hay que mirar las structs de db y las func de filehandler
 
 # light build
 
