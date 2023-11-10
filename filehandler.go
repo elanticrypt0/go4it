@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -32,4 +33,23 @@ func ReadAndParseJson[T any](file string, stru *T) {
 	fileData := strings.NewReader(string(OpenFile(file)))
 	jsonParser := json.NewDecoder(fileData)
 	jsonParser.Decode(&stru)
+}
+
+// Gets the current project dir.
+func PWD() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return dir
+}
+
+// Save or update file
+func FileSave(filename string, content []byte) {
+
+}
+
+// Delete file.
+func FileDelete(filelocation string) bool {
+	return false
 }
