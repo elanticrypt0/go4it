@@ -2,6 +2,8 @@ package go4it
 
 import (
 	"encoding/json"
+	"errors"
+	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
@@ -44,12 +46,40 @@ func PWD() string {
 	return dir
 }
 
-// Save or update file
-func FileSave(filename string, content []byte) {
+func FileExists(filePath string) bool {
+	_, error := os.Stat(filePath)
+	//return !os.IsNotExist(err)
+	return !errors.Is(error, os.ErrNotExist)
+}
 
+// Save or update file
+func FileSave(filename string, content []byte, perms fs.FileMode) bool {
+	if err := os.WriteFile("libs/"+filename+".txt", []byte(content), perms); err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
+// read a file
+func FileRead(filename string) []byte {
+	if FileExists(filename) {
+		data_readed, err := os.ReadFile("libs/" + filename + ".txt")
+		if err != nil {
+			log.Fatal(err)
+		}
+		return data_readed
+	} else {
+		return nil
+	}
 }
 
 // Delete file.
-func FileDelete(filelocation string) bool {
-	return false
+func FileDelete(filepath string) bool {
+	if FileExists(filepath) {
+		os.Remove(filepath)
+		return true
+	} else {
+		return false
+	}
 }
