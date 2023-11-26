@@ -6,7 +6,7 @@ app_server_port="3001"
 app_setup_enabled=true
 app_debug_mode=true
 app_CORS_Origins="http://localhost:4321,http://localhost:3000,http://localhost:65065"
-aPP_CORS_Headers="Origin, Content-Type, Accept"
+app_CORS_Headers="Origin, Content-Type, Accept"
 
 # Database connections
 # format:

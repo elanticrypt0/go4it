@@ -13,6 +13,6 @@ type AppConfig struct {
 	App_setup_enabled   bool
 	App_debug_mode      bool
 	App_CORS_origins    string
-	APP_CORS_headers    string
+	App_CORS_headers    string
 	DB                  map[string]DatabaseConfig
 }
