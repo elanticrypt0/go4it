@@ -19,14 +19,18 @@ func New(filepath string) DirHunter {
 	dh := DirHunter{}
 	dh.MainFilepath = filepath
 	dh.AddMainFilepath()
-	dh.Fetch(filepath, false)
+	dh.Fetch(filepath, false, false)
 	return dh
+}
+
+func (dh *DirHunter) FetchAndRename() {
+	dh.Fetch(dh.MainFilepath, false, true)
 }
 
 // Fetch the content of a directory
 // the results are stored in  Directories or Files
 
-func (dh *DirHunter) Fetch(currentFilepath string, hasParent bool) ([]fs.DirEntry, error) {
+func (dh *DirHunter) Fetch(currentFilepath string, hasParent, isRename bool) ([]fs.DirEntry, error) {
 	_, err := os.Stat(currentFilepath)
 	if err != nil {
 		return nil, err
@@ -42,10 +46,10 @@ func (dh *DirHunter) Fetch(currentFilepath string, hasParent bool) ([]fs.DirEntr
 				if dh.IsMainFilepath(currentFilepath) {
 					dh.Directories[0].HasSubDir = true
 				}
-				dh.AddDirectory(currentFilepath, dirItem)
-				dh.Fetch(currentFilepath+"/"+dirItem.Name(), true)
+				dh.AddDirectory(currentFilepath, dirItem, isRename)
+				dh.Fetch(currentFilepath+"/"+dirItem.Name(), true, isRename)
 			} else {
-				dh.AddFile(dh, currentFilepath, dirItem)
+				dh.AddFile(dh, currentFilepath, dirItem, isRename)
 			}
 		}
 		return content, nil
@@ -57,24 +61,21 @@ func (dh *DirHunter) IsMainFilepath(dir string) bool {
 	return dh.MainFilepath == dir
 }
 
-func (dh *DirHunter) GetAllContent() {
-}
+func (dh *DirHunter) AddDirectory(parent string, fsDir fs.DirEntry, isRename bool) {
+	dirName := fsDir.Name()
+	id := uuid.New()
+	oldpath := parent + "/" + dirName
+	if isRename {
+		dirName = id.String()
+	}
 
-// func (dh *DirHunter) GetAllContentOrdered() {
-// 	for _, item := range dh.Directories {
-// 		// preguntar en files si alguno lo tiene como path si lo tiene
-
-// 	}
-// }
-
-func (dh *DirHunter) AddDirectory(parent string, fsDir fs.DirEntry) {
 	// check if the current dir is the main
-	hasSubdirs := dh.IsMainFilepath(fsDir.Name())
+	hasSubdirs := dh.IsMainFilepath(dirName)
+	path := parent + "/" + dirName
 
-	path := parent + "/" + fsDir.Name()
 	newDir := &Directory{
-		ID:        uuid.New(),
-		Name:      fsDir.Name(),
+		ID:        id,
+		Name:      dirName,
 		Path:      path,
 		HasParent: true,
 		Parent:    parent,
@@ -82,6 +83,10 @@ func (dh *DirHunter) AddDirectory(parent string, fsDir fs.DirEntry) {
 		HasSubDir: hasSubdirs,
 	}
 	dh.Directories = append(dh.Directories, newDir)
+
+	if isRename {
+		dh.Rename(oldpath, path)
+	}
 }
 
 func (dh *DirHunter) AddMainFilepath() {
@@ -96,10 +101,18 @@ func (dh *DirHunter) AddMainFilepath() {
 	dh.Directories = append(dh.Directories, newDir)
 }
 
-func (dh *DirHunter) AddFile(dhParent *DirHunter, parentPath string, fsFile fs.DirEntry) {
-	fullpath := parentPath + "/" + fsFile.Name()
+func (dh *DirHunter) AddFile(dhParent *DirHunter, parentPath string, fsFile fs.DirEntry, isRename bool) {
+	fileName := fsFile.Name()
+	id := uuid.New()
+	oldpath := parentPath + "/" + fileName
+	if isRename {
+		fileName = id.String()
+
+	}
+	fullpath := parentPath + "/" + fileName
+
 	if parentPath != dh.MainFilepath {
-		fullpath = parentPath + "/" + fsFile.Name()
+		fullpath = parentPath + "/" + fileName
 	}
 	fi, err := os.Stat(fullpath)
 
@@ -108,8 +121,8 @@ func (dh *DirHunter) AddFile(dhParent *DirHunter, parentPath string, fsFile fs.D
 		return
 	}
 	newFile := &File{
-		ID:        uuid.New(),
-		Name:      fsFile.Name(),
+		ID:        id,
+		Name:      fileName,
 		Path:      parentPath,
 		FullPath:  fullpath,
 		Size:      fi.Size(),
@@ -119,6 +132,16 @@ func (dh *DirHunter) AddFile(dhParent *DirHunter, parentPath string, fsFile fs.D
 	if currentDirKey > -1 {
 		dh.Directories[currentDirKey].HasFiles = true
 		dh.Directories[currentDirKey].Files = append(dh.Directories[currentDirKey].Files, newFile)
+	}
+	if isRename {
+		dh.Rename(oldpath, fileName)
+	}
+}
+
+func (dh *DirHunter) Rename(oldpath, newpath string) {
+	err := os.Rename(oldpath, newpath)
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 
