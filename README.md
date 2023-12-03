@@ -62,3 +62,7 @@ Para ver las plataformas disponibles
 
 Para ver la plataforma actual
     go env GOOS GOARCH
+
+# DirHunter
+
+Dirhunter sirve para escanear un directorio y mapear todos los archivos. A cada uno les asigna un uuid y procesa su peso, ubicación y extensión.
