@@ -32,7 +32,6 @@ func (dh *DirHunter) RenameAll() {
 		}
 		if dItem.HasFiles {
 			for _, fItem := range dItem.Files {
-				fmt.Println(" -> file ", fItem.Path)
 				dh.RenemeFile(dItem, fItem)
 			}
 		}
@@ -153,7 +152,6 @@ func (dh *DirHunter) RenameDir(dir *Directory) {
 }
 
 func (dh *DirHunter) RenemeFile(dir *Directory, file *File) {
-	fmt.Println("     PARENT .", dir.Path)
 	oldFullpath := dir.Path + "/" + file.Path
 	file.Path = file.UID.String() + "." + file.Extension
 	file.FullPath = dir.Path + "/" + file.Path
