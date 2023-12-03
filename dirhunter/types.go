@@ -2,4 +2,4 @@ package dirhunter
 
 import "github.com/google/uuid"
 
-type ID = uuid.UUID
+type UID = uuid.UUID

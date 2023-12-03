@@ -1,11 +1,15 @@
 package dirhunter
 
 type Directory struct {
-	ID        ID      `json:"id"`
-	Name      string  `json:"name"`
-	Path      string  `json:"path"`
-	HasParent bool    `json:"has_parent"`
-	Parent    string  `json:"parent"`
+	ID   uint   `json:"id"`
+	UID  UID    `json:"uid"`
+	Name string `json:"name"`
+	Path string `json:"path"`
+	// parent date
+	HasParent  bool   `json:"has_parent"`
+	ParentPath string `json:"parent"`
+	ParentID   uint   `json:"parent_id"`
+	// childrens data
 	HasSubDir bool    `json:"has_subdirs"`
 	HasFiles  bool    `json:"has_files"`
 	Files     []*File `json:"files"`
