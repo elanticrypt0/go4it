@@ -46,15 +46,15 @@ func PWD() string {
 	return dir
 }
 
-func FileExists(filePath string) bool {
+func IsFileOrDirExists(filePath string) bool {
 	_, error := os.Stat(filePath)
 	//return !os.IsNotExist(err)
 	return !errors.Is(error, os.ErrNotExist)
 }
 
 // Save or update file
-func FileSave(filename string, content []byte, perms fs.FileMode) bool {
-	if err := os.WriteFile("libs/"+filename+".txt", []byte(content), perms); err != nil {
+func FileSave(filepath, filename string, content []byte, perms fs.FileMode) bool {
+	if err := os.WriteFile(filepath+filename, content, perms); err != nil {
 		return false
 	} else {
 		return true
@@ -62,9 +62,9 @@ func FileSave(filename string, content []byte, perms fs.FileMode) bool {
 }
 
 // read a file
-func FileRead(filename string) []byte {
-	if FileExists(filename) {
-		data_readed, err := os.ReadFile("libs/" + filename + ".txt")
+func FileRead(filepath, filename string) []byte {
+	if IsFileOrDirExists(filepath + filename) {
+		data_readed, err := os.ReadFile(filepath + filename)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -76,7 +76,7 @@ func FileRead(filename string) []byte {
 
 // Delete file.
 func FileDelete(filepath string) bool {
-	if FileExists(filepath) {
+	if IsFileOrDirExists(filepath) {
 		os.Remove(filepath)
 		return true
 	} else {
