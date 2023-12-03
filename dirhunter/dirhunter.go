@@ -143,17 +143,16 @@ func (dh *DirHunter) RenameDir(dir *Directory) {
 	parent := dh.Directories[dir.ParentID]
 	oldPath := parent.Path + "/" + dir.Name
 
-	dir.Name = dir.UID.String()
+	dir.Name = dh.removeDash(dir.UID.String())
 	dir.Path = parent.Path + "/" + dir.Name
 	dir.ParentPath = parent.Path
 	// renamed
 	dh.Rename(oldPath, dir.Path)
-
 }
 
 func (dh *DirHunter) RenemeFile(dir *Directory, file *File) {
 	oldFullpath := dir.Path + "/" + file.Path
-	file.Path = file.UID.String() + "." + file.Extension
+	file.Path = dh.removeDash(file.UID.String()) + "." + file.Extension
 	file.FullPath = dir.Path + "/" + file.Path
 	// renamed
 	dh.Rename(oldFullpath, file.FullPath)
@@ -164,6 +163,10 @@ func (dh *DirHunter) Rename(oldpath, newpath string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func (dh *DirHunter) removeDash(olduuid string) string {
+	return strings.ReplaceAll(olduuid, "-", "")
 }
 
 // returns the current dir key and value
