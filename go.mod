@@ -1,4 +1,4 @@
-module github.com/elanticrypt0/go4it
+module github.com/k23dev/go4it
 
 go 1.21.4
 
