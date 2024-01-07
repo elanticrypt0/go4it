@@ -1,7 +1,8 @@
 package debug
-;
+
 import (
 	"fmt"
+	"log"
 	"reflect"
 )
 

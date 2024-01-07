@@ -1,6 +1,10 @@
 package go4it
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/k23dev/go4it/interact"
+)
 
 type App struct {
 	Config *AppConfig
@@ -15,7 +19,7 @@ func LoadAppConfig(configFile string) *AppConfig {
 	configFile = configFile + ".toml"
 
 	var appconfig AppConfig
-	ReadAndParseToml(configFile, &appconfig)
+	interact.ReadAndParseToml(configFile, &appconfig)
 	// set default app url
 	appconfig.App_url = fmt.Sprintf("%s:%d", appconfig.App_server_host, appconfig.App_server_port)
 	return &appconfig

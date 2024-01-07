@@ -1,4 +1,4 @@
-package go4it
+package interact
 
 import (
 	"runtime"
