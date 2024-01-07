@@ -66,3 +66,15 @@ Para ver la plataforma actual
 # DirHunter
 
 Dirhunter sirve para escanear un directorio y mapear todos los archivos. A cada uno les asigna un uuid y procesa su peso, ubicación y extensión.
+
+# Errors
+
+Ahora se puede tirar errores personalizados con go4itErrors
+
+PAra eso hay que devolver un error en una función del tipo go4itError
+
+    &errors.go4itError{
+        Name:"nombre personalizado del error"
+        Code: 500
+        Message: "Ha ocurrido un error"
+    }
