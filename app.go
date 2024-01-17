@@ -2,12 +2,14 @@ package go4it
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/k23dev/go4it/interact"
 )
 
 type App struct {
 	Config *AppConfig
+	Log    *log.Logger
 	DB     DB
 }
 
@@ -28,6 +30,7 @@ func LoadAppConfig(configFile string) *AppConfig {
 func NewApp(configFile string) App {
 	return App{
 		Config: LoadAppConfig(configFile),
+		Log:    newLog(),
 	}
 }
 
