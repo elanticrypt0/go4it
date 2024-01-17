@@ -1,4 +1,4 @@
-package errors
+package go4error
 
 import "fmt"
 
