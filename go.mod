@@ -1,6 +1,6 @@
 module github.com/k23dev/go4it
 
-go 1.21.5
+go 1.22.0
 
 require (
 	github.com/BurntSushi/toml v1.3.2

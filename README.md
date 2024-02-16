@@ -78,3 +78,21 @@ PAra eso hay que devolver un error en una función del tipo go4itError
         Code: 500
         Message: "Ha ocurrido un error"
     }
+
+# DBOnly
+
+este modo es para poder leer conexiones a diferentes bases de datos desde un archivo de configuración, si requerir las demás opciones de configuración.
+
+
+    dbo:= NewAppDBOnly("./config")
+    // conecta a la db que tenga el nombre de
+    dbo.Connect2DB("local")
+    
+    // setear la conexión como primaria
+    // también se puede setear como secundari .SetSecondary
+    dbo.DB.SetPrimary(0)
+
+    // para poder llamar a la conexión así:
+    dbo.DB.Primary
+    
+    

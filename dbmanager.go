@@ -27,6 +27,21 @@ func Connect2DB(app *App, connName string) {
 
 }
 
+func Connect2DBOnly(dbo *DBOnly, connName string) {
+	// check if config exists
+	dbConfig, exists := dbo.Config.Connection[connName]
+	if exists {
+		newConn := DBActive{
+			Name: connName,
+			Conn: Connect2Engine(&dbConfig),
+		}
+		dbo.DB.Actives = append(dbo.DB.Actives, newConn)
+	}
+	if len(dbo.DB.Actives) == 1 {
+		dbo.DB.SetPrimaryDB(0)
+	}
+}
+
 func Connect2Engine(dbconfig *DatabaseConfig) *gorm.DB {
 
 	var conn *gorm.DB
