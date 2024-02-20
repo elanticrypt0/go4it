@@ -27,7 +27,7 @@ func ReadAndParseToml[T any](file string, stru *T) {
 	tomlData := string(OpenFile(file))
 	_, err := toml.Decode(tomlData, &stru)
 	if err != nil {
-		log.Fatalln("Cannot parse file: " + file)
+		log.Fatalln("Cannot parse file: %s\n" + file)
 	}
 }
 
