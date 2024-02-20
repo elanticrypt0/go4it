@@ -1,3 +1,7 @@
 go.sum
 tests
 go4it_test.go
+.idea
+.vscode
+tests/csv_example.csv
+tests/csvparser_test.go
