@@ -21,9 +21,15 @@ func New(filepath string) DirHunter {
 	dh := DirHunter{}
 	dh.MainFilepath = filepath
 	dh.addMainFilepath()
-	// to count the dirs
-	dh.Fetch(filepath, dh.Directories[0])
+
 	return dh
+}
+
+func (dh *DirHunter) Run(filepath string) {
+	if filepath != "" {
+		dh.MainFilepath = filepath
+	}
+	dh.fetch(dh.MainFilepath, dh.Directories[0])
 }
 
 // Rename all directories
@@ -40,9 +46,9 @@ func (dh *DirHunter) renameAll() {
 	}
 }
 
-// Fetch the content of a directory
+// fetch the content of a directory
 // the results are stored in  Directories or Files
-func (dh *DirHunter) Fetch(currentFilepath string, parent *Directory) ([]fs.DirEntry, error) {
+func (dh *DirHunter) fetch(currentFilepath string, parent *Directory) ([]fs.DirEntry, error) {
 	// checks if dir exists
 	_, err := os.Stat(currentFilepath)
 	if err != nil {
@@ -60,7 +66,7 @@ func (dh *DirHunter) Fetch(currentFilepath string, parent *Directory) ([]fs.DirE
 					dh.Directories[0].HasSubDir = true
 				}
 				dh.addDirectory(parent.ID, currentFilepath, dirItem)
-				dh.Fetch(currentFilepath+"/"+dirItem.Name(), dh.Directories[len(dh.Directories)-1])
+				dh.fetch(currentFilepath+"/"+dirItem.Name(), dh.Directories[len(dh.Directories)-1])
 			} else {
 				dh.addFile(dh, currentFilepath, dirItem)
 			}
