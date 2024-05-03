@@ -203,3 +203,12 @@ func (dh *DirHunter) GetDirAsJSON(d *Directory) string {
 	json, _ := json.Marshal(d)
 	return string(json)
 }
+
+func (dh *DirHunter) PrintDirData() {
+	for _, dir := range dh.Directories {
+		fmt.Printf("%v: \n", dir.Name)
+		for _, dirFile := range dir.Files {
+			fmt.Printf("    + %v\n", dirFile.Name)
+		}
+	}
+}
