@@ -28,6 +28,7 @@ func New(filepath string) DirHunter {
 func (dh *DirHunter) Run(filepath string) {
 	if filepath != "" {
 		dh.MainFilepath = filepath
+		dh.addMainFilepath()
 	}
 	dh.fetch(dh.MainFilepath, dh.Directories[0])
 }
