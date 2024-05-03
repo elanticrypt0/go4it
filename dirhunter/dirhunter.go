@@ -16,23 +16,25 @@ type DirHunter struct {
 	Directories  []*Directory `json:"directories"`
 }
 
+// Create a new instance and run the hunter
 func New(filepath string) DirHunter {
 	dh := DirHunter{}
 	dh.MainFilepath = filepath
-	dh.AddMainFilepath()
+	dh.addMainFilepath()
 	// to count the dirs
 	dh.Fetch(filepath, dh.Directories[0])
 	return dh
 }
 
-func (dh *DirHunter) RenameAll() {
+// Rename all directories
+func (dh *DirHunter) renameAll() {
 	for _, dItem := range dh.Directories {
 		if dItem.ID != 0 {
-			dh.RenameDir(dItem)
+			dh.renameDir(dItem)
 		}
 		if dItem.HasFiles {
 			for _, fItem := range dItem.Files {
-				dh.RenemeFile(dItem, fItem)
+				dh.renemeFile(dItem, fItem)
 			}
 		}
 	}
@@ -40,7 +42,6 @@ func (dh *DirHunter) RenameAll() {
 
 // Fetch the content of a directory
 // the results are stored in  Directories or Files
-
 func (dh *DirHunter) Fetch(currentFilepath string, parent *Directory) ([]fs.DirEntry, error) {
 	// checks if dir exists
 	_, err := os.Stat(currentFilepath)
@@ -55,29 +56,29 @@ func (dh *DirHunter) Fetch(currentFilepath string, parent *Directory) ([]fs.DirE
 		for _, dirItem := range content {
 			// fmt.Printf("%v", dirItem.IsDir())
 			if dirItem.IsDir() {
-				if dh.IsMainFilepath(currentFilepath) {
+				if dh.isMainFilepath(currentFilepath) {
 					dh.Directories[0].HasSubDir = true
 				}
-				dh.AddDirectory(parent.ID, currentFilepath, dirItem)
+				dh.addDirectory(parent.ID, currentFilepath, dirItem)
 				dh.Fetch(currentFilepath+"/"+dirItem.Name(), dh.Directories[len(dh.Directories)-1])
 			} else {
-				dh.AddFile(dh, currentFilepath, dirItem)
+				dh.addFile(dh, currentFilepath, dirItem)
 			}
 		}
 		return content, nil
 	}
 }
 
-func (dh *DirHunter) IsMainFilepath(dir string) bool {
+func (dh *DirHunter) isMainFilepath(dir string) bool {
 	return dh.MainFilepath == dir
 }
 
-func (dh *DirHunter) AddDirectory(parentID uint, parent string, fsDir fs.DirEntry) {
+func (dh *DirHunter) addDirectory(parentID uint, parent string, fsDir fs.DirEntry) {
 	dirName := fsDir.Name()
 	uid := uuid.New()
 
 	// check if the current dir is the main
-	hasSubdirs := dh.IsMainFilepath(dirName)
+	hasSubdirs := dh.isMainFilepath(dirName)
 	// update the parent directory
 	dh.Directories[parentID].HasSubDir = true
 	path := parent + "/" + dirName
@@ -96,11 +97,11 @@ func (dh *DirHunter) AddDirectory(parentID uint, parent string, fsDir fs.DirEntr
 	dh.Directories = append(dh.Directories, newDir)
 }
 
-func (dh *DirHunter) AddMainFilepath() {
+func (dh *DirHunter) addMainFilepath() {
 	newDir := &Directory{
 		ID:        0,
 		UID:       uuid.New(),
-		Name:      dh.RemoveRootFromName(dh.MainFilepath),
+		Name:      dh.removeRootFromName(dh.MainFilepath),
 		Path:      dh.MainFilepath,
 		HasParent: false,
 		HasFiles:  false,
@@ -109,7 +110,7 @@ func (dh *DirHunter) AddMainFilepath() {
 	dh.Directories = append(dh.Directories, newDir)
 }
 
-func (dh *DirHunter) AddFile(dhParent *DirHunter, parentPath string, fsFile fs.DirEntry) {
+func (dh *DirHunter) addFile(dhParent *DirHunter, parentPath string, fsFile fs.DirEntry) {
 	fileName := fsFile.Name()
 	id := uuid.New()
 	extension := filepath.Ext(fileName)[1:]
@@ -132,14 +133,14 @@ func (dh *DirHunter) AddFile(dhParent *DirHunter, parentPath string, fsFile fs.D
 		Size:      fi.Size(),
 		Extension: extension,
 	}
-	currentDirKey, _ := dh.GetCurrentDir(parentPath)
+	currentDirKey, _ := dh.getCurrentDir(parentPath)
 	if currentDirKey > -1 {
 		dh.Directories[currentDirKey].HasFiles = true
 		dh.Directories[currentDirKey].Files = append(dh.Directories[currentDirKey].Files, newFile)
 	}
 }
 
-func (dh *DirHunter) RenameDir(dir *Directory) {
+func (dh *DirHunter) renameDir(dir *Directory) {
 	parent := dh.Directories[dir.ParentID]
 	oldPath := parent.Path + "/" + dir.Name
 
@@ -147,18 +148,18 @@ func (dh *DirHunter) RenameDir(dir *Directory) {
 	dir.Path = parent.Path + "/" + dir.Name
 	dir.ParentPath = parent.Path
 	// renamed
-	dh.Rename(oldPath, dir.Path)
+	dh.rename(oldPath, dir.Path)
 }
 
-func (dh *DirHunter) RenemeFile(dir *Directory, file *File) {
+func (dh *DirHunter) renemeFile(dir *Directory, file *File) {
 	oldFullpath := dir.Path + "/" + file.Path
 	file.Path = dh.removeDash(file.UID.String()) + "." + file.Extension
 	file.FullPath = dir.Path + "/" + file.Path
 	// renamed
-	dh.Rename(oldFullpath, file.FullPath)
+	dh.rename(oldFullpath, file.FullPath)
 }
 
-func (dh *DirHunter) Rename(oldpath, newpath string) {
+func (dh *DirHunter) rename(oldpath, newpath string) {
 	err := os.Rename(oldpath, newpath)
 	if err != nil {
 		fmt.Println(err)
@@ -170,7 +171,7 @@ func (dh *DirHunter) removeDash(olduuid string) string {
 }
 
 // returns the current dir key and value
-func (dh *DirHunter) GetCurrentDir(path string) (int, *Directory) {
+func (dh *DirHunter) getCurrentDir(path string) (int, *Directory) {
 	for key, val := range dh.Directories {
 		if val.Path == path {
 			return key, val
@@ -180,15 +181,17 @@ func (dh *DirHunter) GetCurrentDir(path string) (int, *Directory) {
 }
 
 // remove the "./" from name
-func (dh *DirHunter) RemoveRootFromName(name string) string {
+func (dh *DirHunter) removeRootFromName(name string) string {
 	return name[2:]
 }
 
-func (dh *DirHunter) GetAsJSON() string {
+// return a string in JSON format
+func (dh *DirHunter) GetAllDirAsJSON() string {
 	json, _ := json.Marshal(dh.Directories)
 	return string(json)
 }
 
+// return one dir in JSON format
 func (dh *DirHunter) GetDirAsJSON(d *Directory) string {
 	json, _ := json.Marshal(d)
 	return string(json)
