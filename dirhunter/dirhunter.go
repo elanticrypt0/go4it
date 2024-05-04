@@ -120,7 +120,13 @@ func (dh *DirHunter) addMainFilepath() {
 func (dh *DirHunter) addFile(dhParent *DirHunter, parentPath string, fsFile fs.DirEntry) {
 	fileName := fsFile.Name()
 	id := uuid.New()
-	extension := filepath.Ext(fileName)[1:]
+	
+	ext_aux := filepath.Ext(fileName)
+	extension := ext_aux
+	if len(ext_aux) >= 2 {
+		extension = ext_aux[1:]
+	}
+
 	fullpath := parentPath + "/" + fileName
 
 	if parentPath != dh.MainFilepath {
